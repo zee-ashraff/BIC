@@ -1,16 +1,13 @@
 #import necessary packages
 import os
 import pandas as pd
-import csv
-from sklearn.model_selection import train_test_split
 import requests
-import cv2
 
 #set parent directory
 parent_directory=os.path.dirname(os.path.realpath(__file__))
 
 #read in the train images dataframe
-image_list_train = pd.read_csv(str(parent_directory) + "/" + "0003_Split_train.csv")
+image_list_train = pd.read_csv(str(parent_directory) + "/" + "A_train_set.csv")
 #create two new columns
 image_list_train['filepath']="0"
 image_list_train['filename']="0"
@@ -42,11 +39,11 @@ for i in image_list_train.index:
 
 #select relevant columns from dataframe and generate train csv
 image_list_train = image_list_train[['filename', 'sentiment', 'filepath']]
-image_list_train.to_csv(str(parent_directory) + "/" + '0004_Download_train.csv', index = False)
+image_list_train.to_csv(str(parent_directory) + "/" + 'B_train_set.csv', index = False)
 
 
 #read in the test images dataframe
-image_list_test = pd.read_csv(str(parent_directory) + "/" + "0003_Split_test.csv")
+image_list_test = pd.read_csv(str(parent_directory) + "/" + "A_test_set.csv")
 #create two new columns
 image_list_test['filepath']="0"
 image_list_test['filename']="0"
@@ -76,7 +73,6 @@ for i in image_list_test.index:
         image_list_test['filepath'][i]=file
         image_list_test['filename'][i]="negative."+str(i)+".jpg"
 
-
 #select relevant columns from dataframe and generate train csv
 image_list_test = image_list_test[['filename', 'sentiment', 'filepath']]
-image_list_test.to_csv(str(parent_directory) + "/" + '0004_Download_test.csv', index = False)
+image_list_test.to_csv(str(parent_directory) + "/" + 'B_test_set.csv', index = False)
