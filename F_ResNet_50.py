@@ -1,22 +1,17 @@
-# define and move to dataset directory
-datasetdir = 'C:/Users/zeesh/Desktop/VGG/training_set_4'
+#import necessary packages
 import os
-os.chdir(datasetdir)
-
-# import the needed packages
 import matplotlib.pyplot as plt
-import matplotlib.image as img
 import tensorflow.keras as keras
-import numpy as np
-
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
+# define and move to dataset director
+parent_directory=os.path.dirname(os.path.realpath(__file__))
+datasetdir = parent_directory + "/" + "training_set"
+os.chdir(datasetdir)
 batch_size = 30
 
 def generators(shape, preprocessing):
-    '''Create the training and validation datasets for
-    a given image shape.
-    '''
+    #generate validation and train sets
     imgdatagen = ImageDataGenerator(
         preprocessing_function = preprocessing,
         horizontal_flip = True,
@@ -91,7 +86,7 @@ history = full_model.fit_generator(
     train_dataset,
     validation_data = val_dataset,
     workers=10,
-    epochs=2,
+    epochs=1,
 )
 
 plot_history(history, yrange=(0.9,1))
@@ -112,17 +107,14 @@ full_model.load_weights('resnet50.h5')
 
 from keras.preprocessing import image
 from keras.applications.resnet50 import preprocess_input
-import tensorflow as tf
 import numpy as np
-import os,glob,cv2
-import sys,argparse
 import os
 import pandas as pd
 
 #set parent directory
 parent_directory=os.path.dirname(os.path.realpath(__file__))
 # First, pass the path of the image
-image_list_test = pd.read_csv(str(parent_directory) + "/" + "0004_Download_test.csv")
+image_list_test = pd.read_csv(str(parent_directory) + "/" + "B_test_set.csv")
 image_list_test.rename(columns = {'sentiment':'truth'}, inplace = True)
 image_list_test['prediction']="0"
 image_list_test['true_positive']=0
@@ -168,5 +160,5 @@ for i in (image_list_test.index):
         true_negative = true_negative + 1
     elif (image_list_test['truth'][i] == "negative" and image_list_test_prediction == "positive"):
         false_positive = false_positive + 1
-    print(image_list_test['filepath'][i] + ": " + image_list_test_prediction + " - TP:" + str(
-        true_positive) + ", FP:" + str(false_positive) + ", FN:" + str(false_negative) + ", TN:" + str(true_negative))
+    #confusion matrix output
+    print("TP:" + str(true_positive) + ", FP:" + str(false_positive) + ", FN:" + str(false_negative) +  ", TN:" + str(true_negative))
