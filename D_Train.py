@@ -18,14 +18,14 @@ tf.compat.v1.set_random_seed(2)
 batch_size = 32
 
 # Prepare input data
-classes = os.listdir('C:/Users/zeesh/Desktop/BIC/training_set')
+classes = os.listdir('C:/Users/zeesh/Desktop/Broadview_Image_Classifier/training_set_4')
 num_classes = len(classes)
 
 # 20% of the data will automatically be used for validation
 validation_size = 0.2
 img_size = 128
 num_channels = 3
-train_path = 'C:/Users/zeesh/Desktop/BIC/training_set'
+train_path = 'C:/Users/zeesh/Desktop/Broadview_Image_Classifier/training_set_4'
 
 # We shall load all the training and validation images and labels into memory using openCV and use that during training
 data = dataset.read_train_sets(train_path, img_size, classes, validation_size=validation_size)
@@ -124,28 +124,12 @@ layer_conv1 = create_convolutional_layer(input=x,
                                          num_input_channels=num_channels,
                                          conv_filter_size=filter_size_conv1,
                                          num_filters=num_filters_conv1)
-y = tf.nn.dropout(
-    layer_conv1,
-    rate=0.25,
-    noise_shape=None,
-    seed=None,
-    name=None
-)
-
-layer_conv2 = create_convolutional_layer(input=y,
+layer_conv2 = create_convolutional_layer(input=layer_conv1,
                                          num_input_channels=num_filters_conv1,
                                          conv_filter_size=filter_size_conv2,
                                          num_filters=num_filters_conv2)
 
-y = tf.nn.dropout(
-    layer_conv2,
-    rate=0.25,
-    noise_shape=None,
-    seed=None,
-    name=None
-)
-
-layer_conv3 = create_convolutional_layer(input=y,
+layer_conv3 = create_convolutional_layer(input=layer_conv2,
                                          num_input_channels=num_filters_conv2,
                                          conv_filter_size=filter_size_conv3,
                                          num_filters=num_filters_conv3)
@@ -166,10 +150,10 @@ y_pred = tf.nn.softmax(layer_fc2, name='y_pred')
 
 y_pred_cls = tf.argmax(y_pred, axis=1)
 session.run(tf.compat.v1.global_variables_initializer())
-cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=layer_fc2,
+cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(logits=layer_fc2,
                                                         labels=y_true)
 cost = tf.reduce_mean(cross_entropy)
-optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=1e-4).minimize(cost)
+optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=1e-5).minimize(cost)
 correct_prediction = tf.equal(y_pred_cls, y_true_cls)
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -209,8 +193,8 @@ def train(num_iteration):
             epoch = int(i / int(data.train.num_examples / batch_size))
 
             show_progress(epoch, feed_dict_tr, feed_dict_val, val_loss)
-            saver.save(session, 'BIC-model')
+            saver.save(session, 'BIC-model-4')
 
     total_iterations += num_iteration
 
-train(num_iteration=9000)
+train(num_iteration=15000)
