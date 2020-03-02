@@ -1,11 +1,10 @@
 #import necessary packages
 import os
 import pandas as pd
-import csv
-from sklearn.model_selection import train_test_split
 import requests
-import urllib
-#set parent directory
+from sklearn.model_selection import train_test_split
+
+#set parent directory using the os package
 parent_directory=os.path.dirname(os.path.realpath(__file__))
 
 #create subdirectories where the images will be saved
@@ -18,19 +17,8 @@ os.makedirs(path, exist_ok = True)
 path = os.path.join(parent_directory, "test_set/negative")
 os.makedirs(path, exist_ok = True)
 
-#import necessary packages
-import os
-import pandas as pd
-import csv
-from sklearn.model_selection import train_test_split
-import requests
-import urllib
-
-#set parent directory
-parent_directory=os.path.dirname(os.path.realpath(__file__))
-
 #rename columns and only select the sentiment and URL
-image_list = pd.read_csv(str(parent_directory) + "/" + "image-Sentiment-polarity-DFE.csv")
+image_list = pd.read_csv(str(parent_directory) + "/" + "A_full_set.csv")
 image_list.rename(columns = {'which_of_these_sentiment_scores_does_the_above_image_fit_into_best':'sentiment', 'imageurl':'url'}, inplace = True)
 image_list = image_list[['sentiment', 'url']]
 
@@ -53,22 +41,6 @@ for i in image_list.index:
 image_list = image_list[image_list.exists == 1]
 image_list = image_list[['sentiment', 'url']]
 
-#write result to CSV
-image_list.to_csv(str(parent_directory) + "/" + '0002_Filter.csv', index = False)
-
-#import necessary packages
-import os
-import pandas as pd
-import csv
-from sklearn.model_selection import train_test_split
-import requests
-
-#set parent directory
-parent_directory=os.path.dirname(os.path.realpath(__file__))
-
-#read in the image
-image_list = pd.read_csv(str(parent_directory) + "/" + "0002_Filter.csv")
-
 #select features for X and y
 X = image_list['url']
 y = image_list['sentiment']
@@ -76,8 +48,10 @@ y = image_list['sentiment']
 #split all into train and test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
 
+#concatenate X and Y to get complete train and test sets
 image_list_train = pd.concat([X_train, y_train], axis=1)
 image_list_test = pd.concat([X_test, y_test], axis=1)
 
-image_list_train.to_csv(str(parent_directory) + "/" + '0003_Split_train.csv', index = False)
-image_list_test.to_csv(str(parent_directory) + "/" + '0003_Split_test.csv', index = False)
+#output CSVs files in parent directory with list of images in the train and test sets
+image_list_train.to_csv(str(parent_directory) + "/" + 'A_train_set.csv', index = False)
+image_list_test.to_csv(str(parent_directory) + "/" + 'A_test_set.csv', index = False)
