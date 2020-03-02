@@ -25,4 +25,4 @@ Optional Object Detection Implementation Instructions
 1.	To run the optional object detection algorithm, download the files listed below:
 a.	coco.names	b.	yolov3.cfg  c.	yolov3.weights
 2.	Run E_Classify_and_Detect.py by specifying the image path in the following manner:
-      python C:\Users\zeesh\Desktop\BIC\E_Classify_and_Detect.py test_set\negative\negative.0.jpg
+        python C:\Users\zeesh\Desktop\BIC\E_Classify_and_Detect.py test_set\negative\negative.0.jpg
